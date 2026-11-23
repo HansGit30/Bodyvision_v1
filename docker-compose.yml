@@ -1,0 +1,38 @@
+# Entorno local completo: PostgreSQL 16 + BODYVISION AI en http://localhost:8000
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: bodyvision
+      POSTGRES_USER: bodyvision
+      POSTGRES_PASSWORD: bodyvision_local
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bodyvision -d bodyvision"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: postgresql+psycopg://bodyvision:bodyvision_local@db:5432/bodyvision
+      SECRET_KEY: ${SECRET_KEY:-cambia-esta-clave-local-0123456789abcdef}
+      ENVIRONMENT: development
+      STATIC_DIR: /app/static
+      SEED_DEMO: "true"
+    volumes:
+      - uploads:/data/uploads
+
+volumes:
+  pgdata:
+  uploads:

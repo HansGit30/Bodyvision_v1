@@ -1,0 +1,34 @@
+# Blueprint de Render: servicio web Docker + PostgreSQL gestionado.
+# Render → New → Blueprint → selecciona este repositorio.
+services:
+  - type: web
+    name: bodyvision-ai
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bodyvision-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ENVIRONMENT
+        value: production
+      - key: SEED_DEMO
+        value: "true"
+      - key: ADMIN_EMAIL
+        value: admin@bodyvision.ai
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: MAX_UPLOAD_MB
+        value: "10"
+
+databases:
+  - name: bodyvision-db
+    plan: free
+    databaseName: bodyvision
+    user: bodyvision

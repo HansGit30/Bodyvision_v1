@@ -1,0 +1,17 @@
+**/node_modules
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+frontend/dist
+frontend/public/mediapipe/*.wasm
+frontend/public/mediapipe/*.js
+frontend/public/mediapipe/*.task
+frontend/public/draco
+backend/tests
+backend/uploads
+backend/*.db
+backend/.venv
+.env
+.git
+docs
+*.zip
